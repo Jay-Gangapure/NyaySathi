@@ -11,6 +11,10 @@ export function ProtectedRoute({ children, withLayout = true }: ProtectedRoutePr
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 
+  const token = localStorage.getItem("token");
+
+  return token ? children : <Navigate to="/login" />;
+
   if (!isAuthenticated) {
     return <Navigate to="/restricted" state={{ from: location }} replace />;
   }
@@ -21,3 +25,5 @@ export function ProtectedRoute({ children, withLayout = true }: ProtectedRoutePr
 
   return <>{children}</>;
 }
+
+export default ProtectedRoute;
