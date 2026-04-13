@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation, getLangFont } from "../i18n/useTranslation";
+import { interpretText } from "../services/api";
 
 interface Message {
   id: string;
@@ -116,6 +117,11 @@ export default function AIChatPage() {
         .toUpperCase()
         .slice(0, 2)
     : "U";
+  
+  const handleSend = async () => {
+  const res = await interpretText(input);
+  setMessages([...messages, res.data]);
+};
 
   return (
     <div

@@ -5,6 +5,8 @@ import { useAuth } from "../context/AuthContext";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { useTranslation, getLangFont } from "../i18n/useTranslation";
 
+import { loginUser } from "../services/api";
+
 export default function LoginPage() {
   const { login } = useAuth();
   const { t, lang } = useTranslation();
@@ -37,6 +39,14 @@ export default function LoginPage() {
     } else {
       setError(a.errorInvalidCredentials);
     }
+  const handleLogin = async () => {
+  const res = await loginUser(email, password);
+
+  if (res.success) {
+    localStorage.setItem("token", res.data.token);
+    navigate("/dashboard");
+  }
+};
   };
 
   return (
