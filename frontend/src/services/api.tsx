@@ -5,14 +5,28 @@ export interface ApiResponse<T> {
   data: T;
 }
 
-export const loginUser = async (email: string, password: string) => {
-  const res = await fetch(`${BASE_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
+import axios from "axios";
 
-  return res.json();
+// backend URL
+const API = axios.create({
+  baseURL: "http://127.0.0.1:8000",
+});
+
+// LOGIN API
+export const loginUser = async (email: string, password: string) => {
+  try {
+    const res = await API.post("/auth/login", {
+      email,
+      password,
+    });
+
+    return res.data;  // important
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.response?.data?.detail || "Login failed",
+    };
+  }
 };
 
 export const signupUser = async (data: any) => {
