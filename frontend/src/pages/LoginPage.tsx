@@ -27,7 +27,7 @@ export default function LoginPage() {
   e.preventDefault();
 
   if (!email || !password) {
-    setError(a.errorFillFields);
+    setError("Please fill all fields");
     return;
   }
 
@@ -35,19 +35,17 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    // 🔥 Call backend API
     const res = await loginUser(email, password);
 
     if (res.success) {
-      // Save token
-      localStorage.setItem("token", res.data.token);
+      // store token
+      localStorage.setItem("token", res.data.access_token);
 
-      // Redirect
+      // redirect
       navigate("/dashboard");
     } else {
-      setError(a.errorInvalidCredentials);
+      setError("Invalid email or password");
     }
-
   } catch (err) {
     console.error(err);
     setError("Server error");
