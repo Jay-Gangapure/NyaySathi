@@ -12,7 +12,6 @@ import {
   Navigation,
 } from "lucide-react";
 import { useTranslation, getLangFont } from "../i18n/useTranslation";
-import React, { useState } from "react";
 
 const STATES = [
   "All India",

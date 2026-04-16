@@ -15,7 +15,6 @@ import LegalDirectory from "./pages/LegalDirectory";
 import ProfilePage from "./pages/ProfilePage";
 import RestrictedAccess from "./pages/RestrictedAccess";
 
-
 export const router = createBrowserRouter([
   {
     path: "/",
