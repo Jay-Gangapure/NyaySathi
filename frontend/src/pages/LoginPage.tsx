@@ -5,9 +5,8 @@ import { useAuth } from "../context/AuthContext";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { useTranslation, getLangFont } from "../i18n/useTranslation";
 
-import { loginUser } from "../services/api";
-
 export default function LoginPage() {
+  const { login } = useAuth();
   const { t, lang } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,35 +23,21 @@ export default function LoginPage() {
   const fontFamily = getLangFont(lang);
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-
-  if (!email || !password) {
-    setError("Please fill all fields");
-    return;
-  }
-
-  try {
+    e.preventDefault();
+    if (!email || !password) {
+      setError(a.errorFillFields);
+      return;
+    }
     setLoading(true);
     setError("");
-
-    const res = await loginUser(email, password);
-
-    if (res.success) {
-      // store token
-      localStorage.setItem("token", res.data.access_token);
-
-      // redirect
-      navigate("/dashboard");
-    } else {
-      setError("Invalid email or password");
-    }
-  } catch (err) {
-    console.error(err);
-    setError("Server error");
-  } finally {
+    const ok = await login(email, password);
     setLoading(false);
-  }
-};
+    if (ok) {
+      navigate(from, { replace: true });
+    } else {
+      setError(a.errorInvalidCredentials);
+    }
+  };
 
   return (
     <div
