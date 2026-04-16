@@ -1,16 +1,11 @@
-"""
-Authentication routes: POST /auth/signup and POST /auth/login
-These endpoints are PUBLIC (no JWT required).
-"""
-
 from datetime import datetime
 from fastapi import APIRouter, HTTPException, status, Depends
 from passlib.context import CryptContext
 
 from database.connection import get_db
-from models.user import UserSignupRequest, UserLoginRequest, UserPublicResponse, TokenResponse
+from models.user import UserSignupRequest, UserLoginRequest
 from auth.jwt_handler import create_access_token
-from utils.responses import success_response, error_response
+from utils.responses import success_response
 
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -36,30 +31,18 @@ def _user_doc_to_public(doc: dict) -> dict:
     }
 
 
-# ---------------------------------------------------------------------------
-# POST /auth/signup
-# ---------------------------------------------------------------------------
+# ***REMOVED******REMOVED***=== SIGNUP ***REMOVED******REMOVED***===
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def signup(payload: UserSignupRequest, db=Depends(get_db)):
-    """Register a new NyaySathi user."""
 
-    # Validate language
     lang = payload.preferred_language.lower()
     if lang not in VALID_LANGUAGES:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"preferred_language must be one of: {', '.join(VALID_LANGUAGES)}",
-        )
+        raise HTTPException(status_code=400, detail="Invalid language")
 
-    # Check duplicate email
     existing = await db.users.find_one({"email": payload.email.lower()})
     if existing:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="An account with this email already exists.",
-        )
+        raise HTTPException(status_code=409, detail="Email already exists")
 
-    # Create user document
     user_doc = {
         "name": payload.name.strip(),
         "email": payload.email.lower(),
@@ -71,7 +54,6 @@ async def signup(payload: UserSignupRequest, db=Depends(get_db)):
     result = await db.users.insert_one(user_doc)
     user_doc["_id"] = result.inserted_id
 
-    # Generate token
     token = create_access_token({"sub": str(result.inserted_id)})
 
     return success_response(
@@ -80,23 +62,21 @@ async def signup(payload: UserSignupRequest, db=Depends(get_db)):
             "token_type": "bearer",
             "user": _user_doc_to_public(user_doc),
         },
-        message="Account created successfully.",
+        message="Signup successful",
     )
 
 
-# ---------------------------------------------------------------------------
-# POST /auth/login
-# ---------------------------------------------------------------------------
+# ***REMOVED******REMOVED***=== LOGIN ***REMOVED******REMOVED***===
 @router.post("/login")
 async def login(payload: UserLoginRequest, db=Depends(get_db)):
-    """Authenticate user and return a JWT token."""
 
     user = await db.users.find_one({"email": payload.email.lower()})
-    if not user or not verify_password(payload.password, user["password_hash"]):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password.",
-        )
+
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+
+    if not verify_password(payload.password, user["password_hash"]):
+        raise HTTPException(status_code=401, detail="Wrong password")
 
     token = create_access_token({"sub": str(user["_id"])})
 
@@ -106,5 +86,5 @@ async def login(payload: UserLoginRequest, db=Depends(get_db)):
             "token_type": "bearer",
             "user": _user_doc_to_public(user),
         },
-        message="Login successful.",
+        message="Login successful",
     )
