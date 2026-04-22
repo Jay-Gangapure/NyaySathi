@@ -8,12 +8,14 @@ PROTECTED (JWT required).
 """
 
 from fastapi import APIRouter, HTTPException, Query, status, Depends
+from rag.rag_pipeline import generate_answer
 from pydantic import BaseModel
 
 from auth.jwt_handler import get_current_user_id
 from services.ai_service import detect_scenario, score_to_confidence
 from services.legal_data import SITUATIONS_BY_LANG, ALL_SCENARIO_IDS
 from utils.responses import success_response
+
 
 router = APIRouter()
 
@@ -105,3 +107,8 @@ async def list_supported_scenarios(_: str = Depends(get_current_user_id)):
             "tip": "Describe your situation in plain language and POST to /ai/interpret.",
         }
     )
+
+@router.post("/legal-query")
+async def legal_query(data: dict):
+    answer = generate_answer(data["question"])
+    return {"answer": answer}

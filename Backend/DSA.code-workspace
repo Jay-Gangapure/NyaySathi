@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../../C++Codes/DSA"
+		},
+		{
+			"path": "C:/Users/Pranjal/NyaySathi"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"iostream": "cpp"
+		},
+		"liveServer.settings.multiRootWorkspaceName": "NyaySathi"
+	}
+}
