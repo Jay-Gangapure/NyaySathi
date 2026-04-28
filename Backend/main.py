@@ -10,7 +10,7 @@ from contextlib import asynccontextmanager
 from database.connection import connect_db, disconnect_db
 from routes import auth, situations, ai_interpret, documents, directory, users
 
-
+from routes.ai_chat import router as ai_chat_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Manage startup and shutdown events."""
@@ -46,7 +46,7 @@ app.include_router(situations.router, prefix="/situations", tags=["Situations"])
 app.include_router(ai_interpret.router, prefix="/ai",       tags=["AI Interpretation"])
 app.include_router(documents.router,  prefix="/documents",  tags=["Documents"])
 app.include_router(directory.router,  prefix="/directory",  tags=["Legal Directory"])
-
+app.include_router(ai_chat_router, prefix="/ai", tags=["AI Chat"])
 
 # ---------------------------------------------------------------------------
 # Health check — public
