@@ -11,7 +11,7 @@ A fully modular FastAPI backend providing situation-based legal guidance in Engl
 backend/
 ├── main.py                     # FastAPI app, CORS, router registration
 ├── requirements.txt
-├── .env.example                # Copy to .env and fill values
+├── .env                        # Copy to .env and fill values
 │
 ├── auth/
 │   ├── __init__.py
@@ -73,7 +73,7 @@ pip install -r requirements.txt
 
 ### 5. Configure environment
 ```bash
-cp .env.example .env
+cp .env
 # Edit .env if needed (Mongo URI, secret key, etc.)
 ```
 

@@ -1,7 +1,3 @@
-"""
-Application configuration — reads from environment / .env file.
-"""
-
 from pydantic_settings import BaseSettings
 
 
@@ -13,7 +9,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440  # 24 hours
 
-    gemini_api_key : str = "REMOVED_GEMINI_KEY"
+    GEMINI_API_KEY: str
 
     class Config:
         env_file = ".env"
