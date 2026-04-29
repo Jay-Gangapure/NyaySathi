@@ -16,13 +16,6 @@ class Settings(BaseSettings):
     # =========================
     GEMINI_API_KEY: str
 
-    # =========================
-    # Azure AI / Document Intelligence (keep if needed)
-    # =========================
-    AZURE_ENDPOINT: str = ""
-    AZURE_API_KEY: str = ""
-    AZURE_MODEL_NAME: str = "prebuilt-document"
-
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
