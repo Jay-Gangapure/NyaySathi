@@ -89,11 +89,14 @@ def analyze_document(text: str) -> str:
         prompt = f"""
         You are a legal assistant for Indian law.
 
-        Analyze the document and provide:
-        1. Summary
-        2. Key legal points
-        3. Important clauses
-        4. Risks and suggestions
+        Analyze the document and give:
+
+        1. Summary (max 5 lines)
+        2. Key legal points (5 bullets)
+        3. Top 3 important clauses
+        4. Top 3 risks
+
+        Keep answer short (200-300 words).
 
         Document:
         {text}
@@ -101,11 +104,17 @@ def analyze_document(text: str) -> str:
 
         response = model.generate_content(prompt)
 
-        if response and hasattr(response, "text"):
-            return response.text
-        else:
-            return "AI could not generate a proper response."
+        # ✅ SAFE EXTRACTION
+        if response:
+            if hasattr(response, "text") and response.text:
+                return response.text
+
+            # 🔁 fallback (important)
+            if hasattr(response, "candidates"):
+                return response.candidates[0].content.parts[0].text
+
+        return "AI could not generate a proper response."
 
     except Exception as e:
-        print("Gemini Error:", e)
+        print("Gemini Error:", str(e))
         return "Error analyzing document using AI."

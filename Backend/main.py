@@ -4,7 +4,9 @@ Main FastAPI Application Entry Point
 """
 
 from fastapi import FastAPI
+from routes import voice
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 
 from database.connection import connect_db, disconnect_db
@@ -46,7 +48,8 @@ app.include_router(situations.router, prefix="/situations", tags=["Situations"])
 app.include_router(ai_interpret.router, prefix="/ai",       tags=["AI Interpretation"])
 app.include_router(documents.router,  prefix="/documents",  tags=["Documents"])
 app.include_router(directory.router,  prefix="/directory",  tags=["Legal Directory"])
-
+app.include_router(voice.router,     prefix="/voice",      tags=["Voice & Translation"])
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # ---------------------------------------------------------------------------
 # Health check — public

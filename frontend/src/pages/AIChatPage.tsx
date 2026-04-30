@@ -1,3 +1,4 @@
+import { playVoice } from "../services/voiceService";
 import { useState, useRef, useEffect } from "react";
 import {
   Send,
@@ -71,6 +72,7 @@ export default function AIChatPage() {
   ];
 
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
+  const [voiceLang, setVoiceLang] = useState("en");
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
